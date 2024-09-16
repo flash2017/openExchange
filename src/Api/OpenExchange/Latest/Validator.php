@@ -30,10 +30,14 @@ class Validator
             $code = $param['status'] ?? 0;
             $errors[] = sprintf('%s %s (%s)', $message, $description, $code);
         } else {
-            $requiredKeys = [];
+            $requiredKeys = ['disclaimer',
+            'license',
+            'timestamp',
+            'base',
+            'rates'];
             foreach($requiredKeys as $needKey) {
                 try {
-                    $this->hasPart($needKey, $data);
+                    $this->hasPart($needKey, $param);
                 } catch (RuntimeException $e) {
                     $errors[$needKey] = $e;
                     continue;
@@ -50,7 +54,7 @@ class Validator
     private function hasPart(string $needKey, $data): bool
     {
         if (!array_key_exists($needKey, $data)) {
-            throw new RuntimeException(sprintf('ключ %s не определён'));
+            throw new RuntimeException(sprintf('ключ %s не определён', $needKey));
         }
         
         return true;
